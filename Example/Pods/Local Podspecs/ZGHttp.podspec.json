@@ -1,0 +1,27 @@
+{
+  "name": "ZGHttp",
+  "version": "0.1.0",
+  "summary": "壮观基础网络库ZGHttp",
+  "description": "## 壮观基础网络库\n1. 封装AFNetworking的网络请求\n2. 后台上传请求封装",
+  "homepage": "https://github.com/liresidue/ZGHttp",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Hitter": "601453611@qq.com"
+  },
+  "source": {
+    "git": "https://github.com/liresidue/ZGHttp.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "ZGHttp/Classes/**/*",
+  "dependencies": {
+    "AFNetworking": [
+
+    ]
+  }
+}

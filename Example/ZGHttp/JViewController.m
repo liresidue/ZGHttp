@@ -8,22 +8,19 @@
 
 #import "JViewController.h"
 
+#import <ZGHttp.h>
+
 @interface JViewController ()
 
 @end
 
 @implementation JViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    
+    [JRequest requestWithUrl:@""];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 @end

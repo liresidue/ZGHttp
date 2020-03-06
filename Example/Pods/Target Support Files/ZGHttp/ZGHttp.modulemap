@@ -1,0 +1,6 @@
+framework module ZGHttp {
+  umbrella header "ZGHttp-umbrella.h"
+
+  export *
+  module * { export * }
+}

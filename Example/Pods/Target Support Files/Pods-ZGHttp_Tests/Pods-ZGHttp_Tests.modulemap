@@ -1,0 +1,6 @@
+framework module Pods_ZGHttp_Tests {
+  umbrella header "Pods-ZGHttp_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}
