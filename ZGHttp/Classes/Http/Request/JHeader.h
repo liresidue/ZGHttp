@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger, JRequestSerializerType) {
 
 // response serializer type
 typedef NS_ENUM(NSInteger, JResponseSerializerType) {
+    JResponseSerializerTypeJSON = 0,
     JResponseSerializerTypeHTTP,
-    JResponseSerializerTypeJSON,
     JResponseSerializerTypeXMLParser,
 };

@@ -17,17 +17,22 @@
 /**
  * 设置请求类型
  */
-@property (copy, nonatomic, readonly) JRequest* (^method)(JRequestMethod method);
+@property (copy, nonatomic, readonly) JRequest<JRequestProtocol>* (^method)(JRequestMethod method);
 
 /**
- * 设置基础地址
+ * 设置请求类型
  */
-@property (copy, nonatomic, readonly) JRequest* (^autoBaseUrl)(NSString *baseUrl);
+@property (copy, nonatomic, readonly) JRequest<JRequestProtocol>* (^requestSerializer)(JRequestSerializerType requestSerializerType);
+
+/**
+ * 设置回调类型
+ */
+@property (copy, nonatomic, readonly) JRequest<JRequestProtocol>* (^responseSerializer)(JResponseSerializerType responseSerializerType);
 
 /**
  * 设置超时时间 默认15s
  */
-@property (copy, nonatomic, readonly) JRequest* (^timeout)(NSTimeInterval timeout);
+@property (copy, nonatomic, readonly) JRequest<JRequestProtocol>* (^timeout)(NSTimeInterval timeout);
 
 /**
  * 模型参数
@@ -38,6 +43,11 @@
  * 成功回调
  */
 @property (copy, nonatomic, readonly) JRequest<JRequestProtocol> *(^completionBlock)(JRequestCompletionBlock completed);
+
+/**
+ * 请求进度回调
+ */
+@property (copy, nonatomic, readonly) JRequest<JRequestProtocol> *(^progressBlock)(JRequestProgressBlock progressBlock);
 
 /**
  * 失败回调

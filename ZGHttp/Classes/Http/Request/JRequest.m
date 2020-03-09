@@ -7,6 +7,7 @@
 //
 
 #import "JRequest.h"
+#import "JRequestConfig.h"
 
 @implementation JRequest {
     // 单例
@@ -17,10 +18,9 @@
     // 可定制参数
     NSString *_url;
     NSString *_cookie;
-    NSString *_baseUrl;
     NSTimeInterval _timeout;
     NSDictionary *_dictParam;
-    JRequestMethod _requestMode;
+    JRequestMethod _requestMethod;
     JRequestSerializerType _requestSerializerType;
     JResponseSerializerType _responseSerializerType;
     
@@ -34,10 +34,9 @@
 
 + (JRequest *)requestWithUrl:(NSString *)url {
     JRequest *req = [[JRequest alloc] init];
-    req->_requestMode = JRequestMethodPost;
-    req->_timeout     = 15.f;
-    req->_baseUrl     = @"";
-    req->_cookie      = @"";
+    req->_requestMethod = JRequestMethodPost;
+    req->_timeout       = 15.f;
+    req->_cookie        = @"";
     return req;
 }
 
@@ -54,15 +53,7 @@
 
 - (void)startRequest {
     // 开始请求
-    /**
-     * 1、请求前缓存请求
-     * 2、请后释放请求
-     * 3、重复请求是否取消
-     * 4、
-     */
-    
-    
-    switch (_requestMode) {
+    switch (_requestMethod) {
         case JRequestMethodPost: {
             [self.manager POST:_url
                     parameters:_dictParam
@@ -107,108 +98,134 @@
 
 #pragma mark - <Protocol>
 
+- (JRequest<JRequestProtocol> *(^)(JResponseSerializerType))responseSerializer {
+    return ^id(JResponseSerializerType __responseSerializerType) {
+        self->_responseSerializerType = __responseSerializerType;
+        return self;
+    };
+}
+
+- (JRequest<JRequestProtocol> *(^)(JRequestSerializerType))requestSerializer {
+    return ^id(JRequestSerializerType __requestSerializerType) {
+        self->_requestSerializerType = __requestSerializerType;
+        return self;
+    };
+}
+
+- (JRequest<JRequestProtocol> *(^)(NSTimeInterval))timeout {
+    return ^id(NSTimeInterval __timeout) {
+        self->_timeout = __timeout;
+        return self;
+    };
+}
+
+- (JRequest<JRequestProtocol> *(^)(JRequestMethod))method {
+    return ^id(JRequestMethod __requestMethod) {
+        self->_requestMethod = __requestMethod;
+        return self;
+    };
+}
+
 - (JRequest<JRequestProtocol> *(^)(NSDictionary *))dictParam {
-    return ^id(NSDictionary *dictParam) {
-        self->_dictParam = dictParam;
+    return ^id(NSDictionary *__dictParam) {
+        self->_dictParam = __dictParam;
         return self;
     };
 }
 
 - (JRequest<JRequestProtocol> *(^)(JRequestCompletionBlock))completionBlock {
-    return ^id(JRequestCompletionBlock completionBlock) {
-        self->_completionBlock = completionBlock;
+    return ^id(JRequestCompletionBlock __completionBlock) {
+        self->_completionBlock = __completionBlock;
+        return self;
+    };
+}
+
+- (JRequest<JRequestProtocol> *(^)(JRequestProgressBlock))progressBlock {
+    return ^id(JRequestProgressBlock __progressBlock) {
+        self->_progressBlock = __progressBlock;
         return self;
     };
 }
 
 - (JRequest<JRequestProtocol> *(^)(JRequestFailureBlock))failureBlock {
-    return ^id(JRequestFailureBlock failureBlock) {
-        self->_failureBlock = failureBlock;
+    return ^id(JRequestFailureBlock __failureBlock) {
+        self->_failureBlock = __failureBlock;
         return self;
     };
 }
 
-- (JRequest *(^)(NSString *))cookie {
-    return ^id(NSString *cookie) {
-        if (cookie) self->_cookie = cookie;
-        return self;
-    };
-}
-
-- (JRequest *(^)(NSString *))autoBaseUrl {
-    return ^id(NSString *autoBaseUrl) {
-        self->_baseUrl = autoBaseUrl;
+- (JRequest<JRequestProtocol> *(^)(NSString *))cookie {
+    return ^id(NSString *__cookie) {
+        self->_cookie = __cookie;
         return self;
     };
 }
 
 - (id (^)(void))start {
     return ^id() {
+        // 设置请求数据格式
+        switch (self->_requestSerializerType) {
+            case JRequestSerializerTypeJSON: {
+                self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
+            } break;
+            case JRequestSerializerTypeHTTP: {
+                self.manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+            } break;
+        }
+        [self.manager.requestSerializer setValue:[JRequestConfig config].userAgent forHTTPHeaderField:@"User-Agent"];
         
-//        if (self->_isFromData) { // 如果是表单提交
-//            self.manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-//        } else {
-//            self.manager.requestSerializer = [AFJSONRequestSerializer serializer];
-//        }
-        // 设置请求requestSerializer
-        NSString *userAgent = [NSString stringWithFormat:@"ZgApp/%@ (%@; iOS %@; Scale/%0.2f ) Width/%.0lf Height/%.0lf", [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [[UIScreen mainScreen] scale], [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height];
-        [self.manager.requestSerializer setValue:userAgent forHTTPHeaderField:@"User-Agent"];
-        self.manager.requestSerializer.HTTPMethodsEncodingParametersInURI = [NSSet setWithObjects:@"GET", @"HEAD", nil];
+        // 设置响应数据格式
+        switch (self->_responseSerializerType) {
+            case JResponseSerializerTypeJSON: {
+                AFJSONResponseSerializer *responseSerializer = [AFJSONResponseSerializer serializer];
+                self.manager.responseSerializer = responseSerializer;
+            } break;
+            case JResponseSerializerTypeHTTP: {
+                AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
+                self.manager.responseSerializer = responseSerializer;
+            } break;
+            case JResponseSerializerTypeXMLParser: {
+                AFXMLParserResponseSerializer *responseSerializer = [AFXMLParserResponseSerializer serializer];
+                self.manager.responseSerializer = responseSerializer;
+            } break;
+        }
+        self.manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"application/json", @"text/json" ,@"text/javascript", @"text/plain", nil];
         
+        // 设置cookie
         if (self->_cookie) {
             [self.manager.requestSerializer setValue:self->_cookie forHTTPHeaderField:@"Cookie"];
         }
         
-//        if (self->_isResponJson) {
-//            AFHTTPResponseSerializer *responseSerializer = [AFJSONResponseSerializer serializer];
-//            responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"application/json", @"text/json" ,@"text/javascript", @"text/plain", nil];
-//            self.manager.responseSerializer = responseSerializer;
-//        }
-        
+        // 设置超时时间
         if (self->_timeout > 0) {
             self.manager.requestSerializer.timeoutInterval = self->_timeout;
         }
         
+        // 设置参数
         if (!self->_dictParam) {
             self->_dictParam = [NSDictionary dictionary];
         }
-        
         if (![self->_dictParam isKindOfClass:[NSDictionary class]]) {
             NSLog(@"参数格式错误 - %@ 内容为 - \n%@", NSStringFromClass([self->_dictParam class]), self->_dictParam);
             return nil;
         }
         
-        if (self->_baseUrl) {
-            self->_url = [NSString stringWithFormat:@"%@%@", self->_baseUrl, self->_url];
-        }
-        
+        // 开始请求
         [self startRequest];
         
         return nil;
     };
 }
 
-- (JRequest *(^)(NSTimeInterval))timeout {
-    return ^id(NSTimeInterval timeout) {
-        self->_timeout = timeout;
-        return self;
-    };
-}
-
-#pragma mark - <Getter>
+#pragma mark - <Singleton>
 
 - (AFHTTPSessionManager *)manager {
     static AFHTTPSessionManager *manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        // 设置安全策略
-        AFSecurityPolicy *securityPolicy = [AFSecurityPolicy defaultPolicy];
-        securityPolicy.validatesDomainName = NO;
-        securityPolicy.allowInvalidCertificates = YES;
-        
         // 创建单例
         manager = [AFHTTPSessionManager manager];
-        manager.securityPolicy = securityPolicy;
+        manager.securityPolicy = [JRequestConfig config].securityPolicy;
         self->_httpTasks = [NSMutableDictionary dictionary];
     });
     return manager;

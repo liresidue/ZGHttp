@@ -12,33 +12,32 @@
 NS_ASSUME_NONNULL_BEGIN
 @protocol JUploadProtocol <NSObject>
 
++ (JUpload *)uploadWithUrl:(NSString *)url;
 
-//+ (JUpload *)requestWithUrl:(NSString *)url;
-//
-///**
-// * 设置上传图片的fileName
-// */
-//@property (copy, nonatomic, readonly) JUpload* (^fileName)(NSString *fileName);
-//
-///**
-// * 上传数据
-// */
-//@property (copy, nonatomic, readonly) JUpload<JUploadProtocol> *(^imageFiles)(NSArray *imageFiles);
-//
-///**
-// * 成功回调
-// */
-//@property (copy, nonatomic, readonly) JUpload<JUploadProtocol> *(^completionBlock)(JRequestCompletionBlock completed);
-//
-///**
-// * 失败回调
-// */
-//@property (copy, nonatomic, readonly) JUpload<JUploadProtocol> *(^failureBlock)(JRequestFailureBlock failure);
-//
-///**
-// * 开始请求
-// */
-//@property (copy, nonatomic, readonly) id (^start)(void);
+/**
+ * 设置上传图片的fileName
+ */
+@property (copy, nonatomic, readonly) JUpload<JUploadProtocol> *(^fileName)(NSString *fileName);
+
+/**
+ * 上传数据
+ */
+@property (copy, nonatomic, readonly) JUpload<JUploadProtocol> *(^imageFiles)(NSArray *imageFiles);
+
+/**
+ * 成功回调
+ */
+@property (copy, nonatomic, readonly) JUpload<JUploadProtocol> *(^completionBlock)(JRequestCompletionBlock completed);
+
+/**
+ * 失败回调
+ */
+@property (copy, nonatomic, readonly) JUpload<JUploadProtocol> *(^failureBlock)(JRequestFailureBlock failure);
+
+/**
+ * 开始请求
+ */
+@property (copy, nonatomic, readonly) id (^start)(void);
 
 @end
 
