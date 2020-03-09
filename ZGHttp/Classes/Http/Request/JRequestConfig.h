@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AFNetworking.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (copy, nonatomic) NSString *userAgent; // 设置UA
 
-@property (strong, nonatomic) AFSecurityPolicy *securityPolicy;
+@property (strong, nonatomic) id securityPolicy;
 
 @end
 

@@ -5,9 +5,6 @@
 //  Created by hitter on 2020/3/6.
 //
 
-#import <UIKit/UIKit.h>
-#import "AFNetworking.h"
-
 typedef void (^JRequestFailureBlock)(NSError *err); // 请求失败返回的block
 typedef void (^JRequestProgressBlock)(NSProgress *progress); // 请求进度返回
 typedef void (^JRequestCompletionBlock)(NSURLSessionDataTask *task, id result); // 请求成功返回的block

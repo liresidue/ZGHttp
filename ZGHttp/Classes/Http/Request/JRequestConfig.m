@@ -6,6 +6,7 @@
 //
 
 #import "JRequestConfig.h"
+#import "AFNetworking.h"
 
 @implementation JRequestConfig
 
@@ -20,12 +21,12 @@
 
 #pragma mark - <Getter>
 
-- (AFSecurityPolicy *)securityPolicy {
+- (id)securityPolicy {
     if (!_securityPolicy) {
         // 设置安全策略
         _securityPolicy = [AFSecurityPolicy defaultPolicy];
-        _securityPolicy.validatesDomainName = NO;
-        _securityPolicy.allowInvalidCertificates = YES;
+        ((AFSecurityPolicy *)_securityPolicy).validatesDomainName = NO;
+        ((AFSecurityPolicy *)_securityPolicy).allowInvalidCertificates = YES;
     }
     return _securityPolicy;
 }

@@ -5,6 +5,7 @@
 //  Created by hitter on 2020/3/6.
 //
 
+#import <UIKit/UIKit.h>
 #import "JHeader.h"
 
 @class JUpload;

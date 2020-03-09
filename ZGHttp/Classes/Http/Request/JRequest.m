@@ -8,6 +8,7 @@
 
 #import "JRequest.h"
 #import "JRequestConfig.h"
+#import "AFNetworking.h"
 
 @implementation JRequest {
     // 单例

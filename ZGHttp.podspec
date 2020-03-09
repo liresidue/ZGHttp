@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'ZGHttp'
-  s.version          = '0.1.1'
+  s.version          = '0.1.2'
   s.summary          = '壮观基础网络库ZGHttp'
   s.description      = <<-DESC
   

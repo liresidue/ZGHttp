@@ -6,6 +6,7 @@
 //  Copyright © 2019 Hitter. All rights reserved.
 //  
 
+#import <UIKit/UIKit.h>
 #import "JHeader.h"
 
 @class JRequest;

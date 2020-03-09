@@ -7,6 +7,7 @@
 
 #import "JUpload.h"
 #import "JRequestConfig.h"
+#import "AFNetworking.h"
 
 @implementation JUpload {
     // 单例
