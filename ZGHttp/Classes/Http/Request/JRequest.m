@@ -36,6 +36,7 @@
 + (JRequest *)requestWithUrl:(NSString *)url {
     JRequest *req = [[JRequest alloc] init];
     req->_requestMethod = JRequestMethodPost;
+    req->_url           = url;
     req->_timeout       = 15.f;
     req->_cookie        = @"";
     return req;
