@@ -10,7 +10,10 @@
 #endif
 #endif
 
+#import "JHeader.h"
 #import "JRequest.h"
+#import "JRequestConfig.h"
+#import "JRequestResult.h"
 #import "JUpload.h"
 #import "ZGHttp.h"
 
